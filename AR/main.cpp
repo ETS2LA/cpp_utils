@@ -7,7 +7,7 @@ constexpr double deg2rad(double deg) {
     return deg * std::numbers::pi / 180.0;
 }
 
-py::object game_to_screen_coordinate(double x, double y, double z, double cam_x, double cam_y, double cam_z, double cam_pitch, double cam_yaw, double cam_roll, double cam_fov, int window_x, int window_y, int window_width, int window_height, bool coordinate_relative, bool coordinate_rotation_relative) {
+py::object game_to_screen_coordinate(double x, double y, double z, double cam_x, double cam_y, double cam_z, double head_x, double head_y, double head_z, double cam_pitch, double cam_yaw, double cam_roll, double cabin_pitch, double cabin_yaw, double cabin_roll, double cam_fov, int window_x, int window_y, int window_width, int window_height, bool coordinate_relative, bool coordinate_rotation_relative) {
     double cos_pitch;
     double sin_pitch;
     double cos_yaw;
@@ -30,11 +30,15 @@ py::object game_to_screen_coordinate(double x, double y, double z, double cam_x,
         relative_y = y;
         relative_z = z;
 
+        // if the cam is not the truck inside cam, hide everything with relative coordinates
+        if (abs(cam_x - head_x) > 1 || abs(cam_y - head_y) > 1 || abs(cam_z - head_z) > 1)
+            return py::make_tuple(py::none(), py::none(), py::none());
+
         if (coordinate_rotation_relative) {
-            cos_pitch = cos(deg2rad(cam_pitch));
-            sin_pitch = sin(deg2rad(cam_pitch));
-            cos_yaw = cos(deg2rad(cam_yaw));
-            sin_yaw = sin(deg2rad(cam_yaw));
+            cos_pitch = cos(deg2rad(cabin_pitch));
+            sin_pitch = sin(deg2rad(cabin_pitch));
+            cos_yaw = cos(deg2rad(cabin_yaw));
+            sin_yaw = sin(deg2rad(cabin_yaw));
             cos_roll = cos(0);
             sin_roll = sin(0);
 
@@ -73,6 +77,7 @@ py::object game_to_screen_coordinate(double x, double y, double z, double cam_x,
     final_x = new_x * cos_roll - new_y * sin_roll;
     final_y = new_y * cos_roll + new_x * sin_roll;
 
+    // point behind the camera
     if (final_z >= 0) {
         return py::make_tuple(py::none(), py::none(), py::none());
     }
