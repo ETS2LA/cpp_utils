@@ -1,4 +1,5 @@
 @echo off
+cd /d %~dp0
 
 rmdir /s /q build
 rmdir /s /q ets2la_AR

@@ -1,6 +1,5 @@
 # Ignore the build
 /build
-!/build/x64-release/Release
 
 # Ignore the vscode stuff
 /.vscode/*
