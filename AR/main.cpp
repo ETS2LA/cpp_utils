@@ -31,7 +31,7 @@ py::object game_to_screen_coordinate(double x, double y, double z, double cam_x,
         relative_z = z;
 
         // if the cam is not the truck inside cam, hide everything with relative coordinates
-        if (abs(cam_x - head_x) > 1 || abs(cam_y - head_y) > 1 || abs(cam_z - head_z) > 1)
+        if (abs(cam_x - head_x) > 3 || abs(cam_y - head_y) > 1 || abs(cam_z - head_z) > 3)
             return py::make_tuple(py::none(), py::none(), py::none());
 
         if (coordinate_rotation_relative) {
